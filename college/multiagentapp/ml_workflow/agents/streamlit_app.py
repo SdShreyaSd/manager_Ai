@@ -217,7 +217,6 @@ else:  # Web Development Flow
     # Initialize Web agents
     requirements_agent = RequirementsAgent()
     coder_agent = CoderAgent()
-
     # Input prompt for Web Flow
     prompt = st.text_area(
         "Enter your website requirements:",

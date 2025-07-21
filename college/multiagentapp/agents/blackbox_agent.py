@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 class BlackboxAgent:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.base_url = "https://www.blackbox.ai/api/v1"
+        self.base_url = "https://useblackbox.ai/api/v1"  # Updated endpoint
         self.headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
@@ -39,6 +39,16 @@ class BlackboxAgent:
                 headers=self.headers,
                 json=payload
             )
+            
+            # Check for specific error status codes
+            if response.status_code == 401:
+                raise Exception("Invalid API key or unauthorized access")
+            elif response.status_code == 403:
+                raise Exception("API quota exceeded or account restrictions")
+            elif response.status_code == 404:
+                raise Exception("API endpoint not found. Please check the API URL")
+            
+            response.raise_for_status()  # Will raise HTTPError for other 4XX/5XX
             
             if response.status_code == 200:
                 return response.json()
@@ -72,6 +82,16 @@ class BlackboxAgent:
                 headers=self.headers,
                 json=payload
             )
+            
+            # Check for specific error status codes
+            if response.status_code == 401:
+                raise Exception("Invalid API key or unauthorized access")
+            elif response.status_code == 403:
+                raise Exception("API quota exceeded or account restrictions")
+            elif response.status_code == 404:
+                raise Exception("API endpoint not found. Please check the API URL")
+            
+            response.raise_for_status()  # Will raise HTTPError for other 4XX/5XX
             
             if response.status_code == 200:
                 return response.json()
@@ -108,6 +128,16 @@ class BlackboxAgent:
                 json=payload
             )
             
+            # Check for specific error status codes
+            if response.status_code == 401:
+                raise Exception("Invalid API key or unauthorized access")
+            elif response.status_code == 403:
+                raise Exception("API quota exceeded or account restrictions")
+            elif response.status_code == 404:
+                raise Exception("API endpoint not found. Please check the API URL")
+            
+            response.raise_for_status()  # Will raise HTTPError for other 4XX/5XX
+            
             if response.status_code == 200:
                 return response.json()
             else:
@@ -142,6 +172,16 @@ class BlackboxAgent:
                 headers=self.headers,
                 json=payload
             )
+            
+            # Check for specific error status codes
+            if response.status_code == 401:
+                raise Exception("Invalid API key or unauthorized access")
+            elif response.status_code == 403:
+                raise Exception("API quota exceeded or account restrictions")
+            elif response.status_code == 404:
+                raise Exception("API endpoint not found. Please check the API URL")
+            
+            response.raise_for_status()  # Will raise HTTPError for other 4XX/5XX
             
             if response.status_code == 200:
                 return response.json()

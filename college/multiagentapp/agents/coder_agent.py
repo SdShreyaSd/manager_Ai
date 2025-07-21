@@ -1,4 +1,3 @@
-# agents/coder_agent.py
 import os
 import logging
 import json
@@ -18,7 +17,7 @@ if not BLACKBOX_API_KEY:
 
 class CoderAgent:
     def __init__(self):
-        self.api_url = "https://www.blackbox.ai/api/v1/generate"  # Updated endpoint
+        self.api_url = "https://useblackbox.ai/api/v1/generate"  # Updated endpoint
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {BLACKBOX_API_KEY}"
@@ -71,7 +70,16 @@ class CoderAgent:
             
             # Make the API request
             response = requests.post(self.api_url, headers=self.headers, json=payload)
-            response.raise_for_status()  # Will raise HTTPError for 4XX/5XX
+            
+            # Check for specific error status codes
+            if response.status_code == 401:
+                raise Exception("Invalid API key or unauthorized access")
+            elif response.status_code == 403:
+                raise Exception("API quota exceeded or account restrictions")
+            elif response.status_code == 404:
+                raise Exception("API endpoint not found. Please check the API URL")
+            
+            response.raise_for_status()  # Will raise HTTPError for other 4XX/5XX
             
             # Parse the response according to API spec
             response_data = response.json()
@@ -107,13 +115,4 @@ class CoderAgent:
             
         except Exception as e:
             logger.error(f"Error in code generation: {str(e)}")
-            return f"Error generating code: {str(e)}"
-
-# Function to be called from the main app
-def generate_code(design_spec: str, model_name: str = None) -> str:
-    """
-    Wrapper function to maintain compatibility with the main app.
-    The model_name parameter is kept for interface consistency but not used.
-    """
-    agent = CoderAgent()
-    return agent.generate_code(design_spec)
+            return f"Error generating code: {str(e)}" 
